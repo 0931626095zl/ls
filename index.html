@@ -6,7 +6,7 @@
     <title>Request Chart</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
-<body>
+<body onload="handleLoad()">
     <h1>Request Chart</h1>
     <canvas id="requestChart" width="800" height="400"></canvas>
 
@@ -42,7 +42,7 @@
             requestChart.data.datasets[0].data.push(requestData);
 
             // Giới hạn số lượng điểm trên biểu đồ để tránh quá tải
-            const maxDataPoints = 100000;
+            const maxDataPoints = 10;
             if (requestChart.data.labels.length > maxDataPoints) {
                 requestChart.data.labels.shift();
                 requestChart.data.datasets[0].data.shift();
@@ -52,15 +52,26 @@
             requestChart.update();
         }
 
-        // Giả lập request mới mỗi giây
-        setInterval(function () {
+        // Hàm xử lý khi trang web được tải
+        function handleLoad() {
+            // Gọi hàm xử lý request khi trang web được tải
+            handleRequest();
+        }
+
+        // Hàm xử lý request
+        function handleRequest() {
+            // Xử lý request ở đây
+
             // Giả lập dữ liệu request (ở đây sử dụng một số ngẫu nhiên)
             const timestamp = Date.now();
             const requestData = Math.floor(Math.random() * 100);
 
             // Cập nhật biểu đồ với dữ liệu mới
             updateChart(timestamp, requestData);
-        }, 1000);
+
+            // Gọi lại hàm xử lý request sau một khoảng thời gian (ở đây là 1 giây)
+            setTimeout(handleRequest, 1000);
+        }
     </script>
 </body>
 </html>
