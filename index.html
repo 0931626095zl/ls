@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Request Chart</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <h1>Request Chart</h1>
+    <canvas id="requestChart" width="800" height="400"></canvas>
+
+    <script>
+        // Tạo biểu đồ
+        var ctx = document.getElementById('requestChart').getContext('2d');
+        var requestChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: [],
+                datasets: [{
+                    label: 'Requests',
+                    data: [],
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    borderWidth: 2,
+                    fill: false
+                }]
+            },
+            options: {
+                scales: {
+                    x: {
+                        type: 'linear',
+                        position: 'bottom'
+                    }
+                }
+            }
+        });
+
+        // Hàm cập nhật biểu đồ
+        function updateChart(timestamp, requestData) {
+            // Thêm dữ liệu mới vào biểu đồ
+            requestChart.data.labels.push(timestamp);
+            requestChart.data.datasets[0].data.push(requestData);
+
+            // Giới hạn số lượng điểm trên biểu đồ để tránh quá tải
+            const maxDataPoints = 100000;
+            if (requestChart.data.labels.length > maxDataPoints) {
+                requestChart.data.labels.shift();
+                requestChart.data.datasets[0].data.shift();
+            }
+
+            // Cập nhật biểu đồ
+            requestChart.update();
+        }
+
+        // Giả lập request mới mỗi giây
+        setInterval(function () {
+            // Giả lập dữ liệu request (ở đây sử dụng một số ngẫu nhiên)
+            const timestamp = Date.now();
+            const requestData = Math.floor(Math.random() * 100);
+
+            // Cập nhật biểu đồ với dữ liệu mới
+            updateChart(timestamp, requestData);
+        }, 1000);
+    </script>
+</body>
+</html>
